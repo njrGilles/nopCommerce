@@ -3,6 +3,7 @@ using FluentValidation.Attributes;
 using Nop.Web.Framework.Mvc.ModelBinding;
 using Nop.Web.Framework.Models;
 using Nop.Web.Validators.Catalog;
+using Nop.Web.Areas.Admin.Models.Catalog;
 
 namespace Nop.Web.Models.Catalog
 {
@@ -24,6 +25,8 @@ namespace Nop.Web.Models.Catalog
         {
             Items = new List<ProductReviewModel>();
             AddProductReview = new AddProductReviewModel();
+            ReviewTypeList = new List<ReviewTypeModel>();
+            ProductReviewReviewTypeMappingModel = new ProductReviewReviewTypeMappingModel();
         }
         public int ProductId { get; set; }
 
@@ -33,6 +36,8 @@ namespace Nop.Web.Models.Catalog
 
         public IList<ProductReviewModel> Items { get; set; }
         public AddProductReviewModel AddProductReview { get; set; }
+        public IList<ReviewTypeModel> ReviewTypeList { get; set; }
+        public ProductReviewReviewTypeMappingModel ProductReviewReviewTypeMappingModel { get; set; }
     }
 
     public partial class ProductReviewModel : BaseNopEntityModel
@@ -81,5 +86,15 @@ namespace Nop.Web.Models.Catalog
         public bool CanCurrentCustomerLeaveReview { get; set; }
         public bool SuccessfullyAdded { get; set; }
         public string Result { get; set; }
+    }
+
+    public partial class ProductReviewReviewTypeMappingModel : BaseNopEntityModel
+    {
+        public int ProductReviewId { get; set; }
+
+        public int ReviewTypeId { get; set; }
+
+        [NopResourceDisplayName("Admin.Catalog.ProductReviewReviewType.Fields.Rating")]
+        public int Rating { get; set; }
     }
 }

@@ -12,6 +12,8 @@ namespace Nop.Core.Domain.Catalog
     {
         private ICollection<ProductReviewHelpfulness> _productReviewHelpfulnessEntries;
 
+        private ICollection<ProductReviewReviewTypeMapping> _productReviewReviewTypeMappingEntries;
+
         /// <summary>
         /// Gets or sets the customer identifier
         /// </summary>
@@ -94,6 +96,15 @@ namespace Nop.Core.Domain.Catalog
         {
             get { return _productReviewHelpfulnessEntries ?? (_productReviewHelpfulnessEntries = new List<ProductReviewHelpfulness>()); }
             protected set { _productReviewHelpfulnessEntries = value; }
+        }
+
+        /// <summary>
+        /// Gets the entries of product reviews
+        /// </summary>
+        public virtual ICollection<ProductReviewReviewTypeMapping> ProductReviewReviewTypeMappingEntries
+        {
+            get { return _productReviewReviewTypeMappingEntries ?? (_productReviewReviewTypeMappingEntries = new List<ProductReviewReviewTypeMapping>()); }
+            protected set { _productReviewReviewTypeMappingEntries = value; }
         }
     }
 }

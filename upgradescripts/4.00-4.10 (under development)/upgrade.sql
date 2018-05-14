@@ -950,6 +950,78 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Payment">
     <Value></Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Settings.ReviewType">
+    <Value>Review types</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Settings.ReviewType.Added">
+    <Value>The new review type has been added successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Settings.ReviewType.AddNew">
+    <Value>Add a new review type</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Settings.ReviewType.BackToList">
+    <Value>back to review type list</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Settings.ReviewType.Deleted">
+    <Value>The review type has been deleted successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Settings.ReviewType.Description">
+    <Value>You can configure a list of review types if you think that a basic review is not enough.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Settings.ReviewType.EditDetails">
+    <Value>Edit review type details</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Settings.ReviewType.Fields.Deleted">
+    <Value>Deleted</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Settings.ReviewType.Fields.Description">
+    <Value>Description</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.Settings.ReviewType.Fields.Description.Hint">
+    <Value>The description of the review type.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Settings.ReviewType.Fields.Description.Required">
+    <Value>Please provide a description.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Settings.ReviewType.Fields.DisplayOrder">
+    <Value>Display order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Settings.ReviewType.Fields.DisplayOrder.Hint">
+    <Value>The review type display order. 1 represents the first item in the list.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Settings.ReviewType.Fields.IsRequired">
+    <Value>Required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Settings.ReviewType.Fields.IsRequired.Hint">
+    <Value>When an attribute is required, the customer must choose an appropriate attribute value before they can continue.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Settings.ReviewType.Fields.Name">
+    <Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Settings.ReviewType.Fields.Name.Hint">
+    <Value>The name of the review type.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Settings.ReviewType.Fields.Name.Required">
+    <Value>Please provide a name.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Settings.ReviewType.Fields.VisibleToAllCustomers">
+    <Value>Visible to all customers</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Settings.ReviewType.Fields.VisibleToAllCustomers.Hint">
+    <Value>Sets visibility of the review type for all customers.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Settings.ReviewType.Updated">
+    <Value>The review type has been updated successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.AddNewReviewType">
+    <Value>Added a new review type (ID = {0})</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.EditReviewType">
+    <Value>Edited a review type (ID = {0})</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.DeleteReviewType">
+   <Value>Deleted a review type (ID = {0})</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -1309,6 +1381,30 @@ IF NOT EXISTS (SELECT 1 FROM [ActivityLogType] WHERE [SystemKeyword] = N'DeleteV
 BEGIN
 	INSERT [ActivityLogType] ([SystemKeyword], [Name], [Enabled])
 	VALUES (N'DeleteVendorAttributeValue', N'Delete a vendor attribute value', N'true')
+END
+GO
+
+--new activity type
+IF NOT EXISTS (SELECT 1 FROM [ActivityLogType] WHERE [SystemKeyword] = N'AddNewReviewType')
+BEGIN
+	INSERT [ActivityLogType] ([SystemKeyword], [Name], [Enabled])
+	VALUES (N'AddNewReviewType', N'Add a new review type', N'true')
+END
+GO
+
+--new activity type
+IF NOT EXISTS (SELECT 1 FROM [ActivityLogType] WHERE [SystemKeyword] = N'DeleteReviewType')
+BEGIN
+	INSERT [ActivityLogType] ([SystemKeyword], [Name], [Enabled])
+	VALUES (N'DeleteReviewType', N'Delete a review type', N'true')
+END
+GO
+
+--new activity type
+IF NOT EXISTS (SELECT 1 FROM [ActivityLogType] WHERE [SystemKeyword] = N'EditReviewType')
+BEGIN
+	INSERT [ActivityLogType] ([SystemKeyword], [Name], [Enabled])
+	VALUES (N'EditReviewType', N'Edit a review type', N'true')
 END
 GO
 

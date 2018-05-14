@@ -56,6 +56,34 @@
                                     <li class="label last">@T("Reviews.Fields.Rating.Excellent")</li>
                                 </ul>
                             </div>
+                            @if (Model.ReviewTypeList.Count > 0)
+                            {
+                                var itemNum = 0;
+                                <div class="review-type-list">                                    
+                                    @foreach (var reviewType in Model.ReviewTypeList.OrderBy(ob => ob.DisplayOrder))
+                                    {
+                                        itemNum =+ 1;
+                                        <div class="product-review-type-item">
+                                            <div class="review-type-title">
+                                                <strong>@reviewType.Name</strong>
+                                            </div>
+                                            <div class="review-type-content">
+                                                <ul>
+                                                    <li class="label first">@T("Reviews.Fields.Rating.Bad")</li>
+                                                    <li class="rating-options">
+                                                        <input asp-for="ProductReviewReviewTypeMappingModel.Rating" value="1" type="radio" id="addproductratingext_@(itemNum)" />
+                                                        <input asp-for="ProductReviewReviewTypeMappingModel.Rating" value="2" type="radio" id="addproductratingext_@(itemNum)" />
+                                                        <input asp-for="ProductReviewReviewTypeMappingModel.Rating" value="3" type="radio" id="addproductratingext_@(itemNum)" />
+                                                        <input asp-for="ProductReviewReviewTypeMappingModel.Rating" value="4" type="radio" id="addproductratingext_@(itemNum)" />
+                                                        <input asp-for="ProductReviewReviewTypeMappingModel.Rating" value="5" type="radio" id="addproductratingext_@(itemNum)" />
+                                                    </li>
+                                                    <li class="label last">@T("Reviews.Fields.Rating.Excellent")</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            }                            
                             @if (Model.AddProductReview.DisplayCaptcha)
                             {
                                 <div class="captcha-box">
