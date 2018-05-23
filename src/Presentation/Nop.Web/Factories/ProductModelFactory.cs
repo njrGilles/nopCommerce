@@ -72,6 +72,7 @@ namespace Nop.Web.Factories
         private readonly OrderSettings _orderSettings;
         private readonly SeoSettings _seoSettings;
         private readonly IStaticCacheManager _cacheManager;
+        private readonly IReviewTypeService _reviewTypeService;
 
         #endregion
 
@@ -109,7 +110,8 @@ namespace Nop.Web.Factories
             CaptchaSettings captchaSettings,
             OrderSettings orderSettings,
             SeoSettings seoSettings,
-            IStaticCacheManager cacheManager)
+            IStaticCacheManager cacheManager,
+            IReviewTypeService reviewTypeService)
         {
             this._specificationAttributeService = specificationAttributeService;
             this._categoryService = categoryService;
@@ -144,6 +146,7 @@ namespace Nop.Web.Factories
             this._orderSettings = orderSettings;
             this._seoSettings = seoSettings;
             this._cacheManager = cacheManager;
+            this._reviewTypeService = reviewTypeService;
         }
 
         #endregion
@@ -184,11 +187,13 @@ namespace Nop.Web.Factories
                     TotalReviews = product.ApprovedTotalReviews
                 };
             }
+
             if (productReview != null)
             {
                 productReview.ProductId = product.Id;
                 productReview.AllowCustomerReviews = product.AllowCustomerReviews;
             }
+
             return productReview;
         }
 
@@ -325,6 +330,7 @@ namespace Nop.Web.Factories
                             priceModel.PriceValue = finalPrice;
                         }
                     }
+
                     if (product.IsRental)
                     {
                         //rental product
@@ -1401,10 +1407,25 @@ namespace Nop.Web.Factories
                 ? productReviews.OrderBy(pr => pr.CreatedOnUtc)
                 : productReviews.OrderByDescending(pr => pr.CreatedOnUtc);
 
+            //get all review types
+            foreach (var reviewType in _reviewTypeService.GetAllReviewTypes())
+            {
+                model.ReviewTypeList.Add(new ReviewTypeModel
+                {
+                    Id = reviewType.Id,
+                    Name = reviewType.Name,
+                    Description = reviewType.Description,
+                    VisibleToAllCustomers = reviewType.VisibleToAllCustomers,
+                    DisplayOrder = reviewType.DisplayOrder,
+                    IsRequired = reviewType.IsRequired,
+                });
+            }            
+
+            //filling data from db
             foreach (var pr in productReviews)
             {
                 var customer = pr.Customer;
-                model.Items.Add(new ProductReviewModel
+                var producReviewModel = new ProductReviewModel
                 {
                     Id = pr.Id,
                     CustomerId = pr.CustomerId,
@@ -1421,7 +1442,47 @@ namespace Nop.Web.Factories
                         HelpfulNoTotal = pr.HelpfulNoTotal,
                     },
                     WrittenOnStr = _dateTimeHelper.ConvertToUserTime(pr.CreatedOnUtc, DateTimeKind.Utc).ToString("g"),
-                });
+                };
+
+                foreach (var q in _reviewTypeService.GetProductAttributeMappingsByProductReviewId(pr.Id))
+                {                  
+                    producReviewModel.ProductReviewExtList.Add(new ProductReviewReviewTypeMappingModel
+                    {
+                        ReviewTypeId = q.ReviewTypeId,
+                        ProductReviewId = pr.Id,
+                        Rating = q.Rating,
+                        Name = q.ReviewType.Name,
+                        VisibleToAllCustomers = q.ReviewType.VisibleToAllCustomers,
+                    });
+                }               
+
+                model.Items.Add(producReviewModel);
+            }
+
+            foreach (var rt in model.ReviewTypeList)
+            {
+                var reviewTypeMappingModel = new AddProductReviewReviewTypeMappingModel                
+                {
+                    ReviewTypeId = rt.Id,
+                    Name = rt.Name,
+                    Description = rt.Description,
+                    DisplayOrder = rt.DisplayOrder,
+                };
+                model.AddProductReviewExtList.Add(reviewTypeMappingModel);
+
+                //Average rating
+                var totalRating = 0;
+                var totalCount = 0;
+                foreach (var item in model.Items)
+                {
+                    foreach (var q in item.ProductReviewExtList.Where(w => w.ReviewTypeId == rt.Id))
+                    {
+                        totalRating += q.Rating;
+                        totalCount = ++totalCount;
+                    }
+                }
+
+                model.AverageRating.Add(rt.Id, value: (double)totalRating / (totalCount > 0 ? totalCount : 1));
             }
 
             model.AddProductReview.CanCurrentCustomerLeaveReview = _catalogSettings.AllowAnonymousUsersToReviewProduct || !_workContext.CurrentCustomer.IsGuest();

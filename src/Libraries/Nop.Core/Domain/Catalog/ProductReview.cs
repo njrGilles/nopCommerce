@@ -11,7 +11,6 @@ namespace Nop.Core.Domain.Catalog
     public partial class ProductReview : BaseEntity
     {
         private ICollection<ProductReviewHelpfulness> _productReviewHelpfulnessEntries;
-
         private ICollection<ProductReviewReviewTypeMapping> _productReviewReviewTypeMappingEntries;
 
         /// <summary>

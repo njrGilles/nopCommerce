@@ -971,9 +971,6 @@ set @resources='
   <LocaleResource Name="Admin.Settings.ReviewType.EditDetails">
     <Value>Edit review type details</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Settings.ReviewType.Fields.Deleted">
-    <Value>Deleted</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Settings.ReviewType.Fields.Description">
     <Value>Description</Value>
   </LocaleResource>  
@@ -1021,6 +1018,18 @@ set @resources='
   </LocaleResource>
   <LocaleResource Name="ActivityLog.DeleteReviewType">
    <Value>Deleted a review type (ID = {0})</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.ProductReviewsExt.Fields.Description">
+    <Value>Description</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.ProductReviewsExt.Fields.Name">
+    <Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.ProductReviewsExt.Fields.Rating">
+    <Value>Rating</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.ProductReviewsExt.Fields.VisibleToAllCustomers">
+    <Value>Visible to all customers</Value>
   </LocaleResource>
 </Language>
 '
@@ -2624,4 +2633,51 @@ GO
 --delete setting
 DELETE FROM [Setting]
 WHERE [Name] = N'captchasettings.recaptchaversion'
+GO
+
+--Review type
+IF NOT EXISTS (SELECT 1 FROM sys.objects WHERE object_id = object_id(N'[ReviewType]') AND objectproperty(object_id, N'IsUserTable') = 1)
+BEGIN
+	CREATE TABLE [dbo].[ReviewType](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[Name] [nvarchar](max) NOT NULL,
+	[Description] [nvarchar](max) NOT NULL,
+	[DisplayOrder] [int] NOT NULL,	
+	[VisibleToAllCustomers] [bit] NOT NULL,
+	[IsRequired] [bit] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = ON, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, FILLFACTOR = 80) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+
+END
+GO
+
+--Product review and review type mapping
+IF NOT EXISTS (SELECT 1 FROM sys.objects WHERE object_id = object_id(N'[ProductReview_ReviewType_Mapping]') AND objectproperty(object_id, N'IsUserTable') = 1)
+BEGIN
+	CREATE TABLE [dbo].[ProductReview_ReviewType_Mapping](
+		[Id] [int] IDENTITY(1,1) NOT NULL,
+		[ProductReviewID] [int] NOT NULL,
+		[ReviewTypeID] [int] NOT NULL,
+		[Rating] [int] NOT NULL,
+	PRIMARY KEY CLUSTERED 
+	(
+		[Id] ASC
+	)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = ON, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, FILLFACTOR = 80) ON [PRIMARY]
+	) ON [PRIMARY]	
+
+	ALTER TABLE [dbo].[ProductReview_ReviewType_Mapping]  WITH CHECK ADD  CONSTRAINT [ProductReviewReviewTypeRel_ProductReview] FOREIGN KEY([ProductReviewID])
+	REFERENCES [dbo].[ProductReview] ([Id])
+	ON DELETE CASCADE	
+
+	ALTER TABLE [dbo].[ProductReview_ReviewType_Mapping] CHECK CONSTRAINT [ProductReviewReviewTypeRel_ProductReview]	
+
+	ALTER TABLE [dbo].[ProductReview_ReviewType_Mapping]  WITH CHECK ADD  CONSTRAINT [ProductReviewReviewTypeRel_ReviewType] FOREIGN KEY([ReviewTypeID])
+	REFERENCES [dbo].[ReviewType] ([Id])
+	ON DELETE CASCADE	
+
+	ALTER TABLE [dbo].[ProductReview_ReviewType_Mapping] CHECK CONSTRAINT [ProductReviewReviewTypeRel_ReviewType]	
+END
 GO

@@ -23,11 +23,6 @@ namespace Nop.Core.Domain.Catalog
         public int DisplayOrder { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether the review type is deleted
-        /// </summary>
-        public bool Deleted { get; set; }        
-
-        /// <summary>
         /// Gets or sets a value indicating whether the review type is visible to all customers
         /// </summary>
         public bool VisibleToAllCustomers { get; set; }

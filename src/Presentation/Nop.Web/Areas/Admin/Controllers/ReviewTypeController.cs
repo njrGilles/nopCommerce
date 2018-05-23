@@ -144,7 +144,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //try to get an product review type with the specified id
             var reviewType = _reviewTypeService.GetReviewTypeById(id);
-            if (reviewType == null || reviewType.Deleted)
+            if (reviewType == null)
                 return RedirectToAction("List");
 
             //prepare model
@@ -161,7 +161,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //try to get an review type with the specified id
             var reviewType = _reviewTypeService.GetReviewTypeById(model.Id);
-            if (reviewType == null || reviewType.Deleted)
+            if (reviewType == null)
                 return RedirectToAction("List");
 
             if (ModelState.IsValid)
@@ -197,7 +197,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //try to get an review type with the specified id
             var reviewType = _reviewTypeService.GetReviewTypeById(id);
-            if (reviewType == null || reviewType.Deleted)
+            if (reviewType == null)
                 return RedirectToAction("List");
 
             try

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
@@ -30,6 +31,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         private readonly IProductService _productService;
         private readonly IWorkContext _workContext;
         private readonly IWorkflowMessageService _workflowMessageService;
+        private readonly IReviewTypeService _reviewTypeService;
 
         #endregion Fields
 
@@ -43,7 +45,8 @@ namespace Nop.Web.Areas.Admin.Controllers
             IProductReviewModelFactory productReviewModelFactory,
             IProductService productService,
             IWorkContext workContext,
-            IWorkflowMessageService workflowMessageService)
+            IWorkflowMessageService workflowMessageService,
+            IReviewTypeService reviewTypeService)
         {
             this._catalogSettings = catalogSettings;
             this._customerActivityService = customerActivityService;
@@ -54,6 +57,7 @@ namespace Nop.Web.Areas.Admin.Controllers
             this._productService = productService;
             this._workContext = workContext;
             this._workflowMessageService = workflowMessageService;
+            this._reviewTypeService = reviewTypeService;
         }
 
         #endregion
@@ -323,6 +327,20 @@ namespace Nop.Web.Areas.Admin.Controllers
                           })
                 .ToList();
             return Json(result);
+        }
+
+        [HttpPost]
+        public virtual IActionResult ProductReviewReviewTypeMappingList(ProductReviewReviewTypeMappingSearchModel searchModel)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProductReviews))
+                return AccessDeniedKendoGridJson();
+            var productReview = _productService.GetProductReviewById(searchModel.ProductReviewId)
+                ?? throw new ArgumentException("No product review found with the specified id");
+
+            //prepare model
+            var model = _productReviewModelFactory.PrepareProductReviewReviewTypeMappingListModel(searchModel, productReview);
+
+            return Json(model);
         }
 
         #endregion

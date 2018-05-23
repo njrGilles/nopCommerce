@@ -288,6 +288,14 @@ namespace Nop.Web.Controllers
 
             //default value
             model.AddProductReview.Rating = _catalogSettings.DefaultProductRatingValue;
+            
+            //default value for all review types
+            if (model.ReviewTypeList.Count > 0)
+                foreach (var productReviewExt in model.AddProductReviewExtList)
+                {
+                    productReviewExt.Rating = _catalogSettings.DefaultProductRatingValue;
+                }
+
             return View(model);
         }
 
@@ -343,8 +351,20 @@ namespace Nop.Web.Controllers
                     CreatedOnUtc = DateTime.UtcNow,
                     StoreId = _storeContext.CurrentStore.Id,
                 };
+
                 product.ProductReviews.Add(productReview);
-                _productService.UpdateProduct(product);
+
+                //add product review and review type mapping                
+                foreach (var reviewExt in model.AddProductReviewExtList)
+                {
+                    var productReviewExt = new ProductReviewReviewTypeMapping
+                    {
+                        ProductReviewId = productReview.Id,                        
+                        ReviewTypeId = reviewExt.ReviewTypeId,
+                        Rating = reviewExt.Rating
+                    };
+                    productReview.ProductReviewReviewTypeMappingEntries.Add(productReviewExt);
+                }
 
                 //update product totals
                 _productService.UpdateProductReviewTotals(product);

@@ -361,6 +361,59 @@ namespace Nop.Data.Tests
             };
         }
 
+        public static ProductReviewReviewTypeMapping GetTestProductReviewReviewTypeMapping(this PersistenceTest test)
+        {
+            var testProductReview = test.GetTestProductReview();
+            var testReviewType = test.GetTestReviewType();
+
+            return new ProductReviewReviewTypeMapping
+            {
+                Rating = 5,
+                ProductReview = testProductReview,
+                ProductReviewId = testProductReview.Id,
+                ReviewType = testReviewType,
+                ReviewTypeId = testReviewType.Id
+            };
+        }
+
+        public static ProductReview GetTestProductReview(this PersistenceTest test)
+        {
+            var testProduct = test.GetTestProduct();
+            var testStore = test.GetTestStore();
+            var testCustomer = test.GetTestCustomer();
+
+            return new ProductReview
+            {
+                Product = testProduct,
+                ProductId = testProduct.Id,
+                Store = testStore,
+                StoreId = testStore.Id,
+                Customer = testCustomer,
+                CustomerId = testCustomer.Id,
+                ReviewText = "TestText",
+                Title = "TestTitle",
+                IsApproved = true,
+                Rating = 5,
+                HelpfulNoTotal = 0,
+                HelpfulYesTotal = 1,
+                CreatedOnUtc = new DateTime(2010, 01, 01),
+                CustomerNotifiedOfReply = true,
+                ReplyText = "Test"
+            };
+        }
+
+        public static ReviewType GetTestReviewType(this PersistenceTest test)
+        {
+            return new ReviewType
+            {
+                Name = "TestName",
+                Description = "TestDescription",
+                DisplayOrder = 1,
+                IsRequired = true,
+                VisibleToAllCustomers = true
+            };
+        }
+
         public static ProductCategory GetTestProductCategory(this PersistenceTest test)
         {
             return new ProductCategory

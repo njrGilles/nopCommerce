@@ -2556,6 +2556,18 @@
   <LocaleResource Name="Admin.Catalog.ProductReviews.Updated">
     <Value>The product review has been updated successfully.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.ProductReviewsExt.Fields.Description">
+    <Value>Description</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.ProductReviewsExt.Fields.Name">
+    <Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.ProductReviewsExt.Fields.Rating">
+    <Value>Rating</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.ProductReviewsExt.Fields.VisibleToAllCustomers">
+    <Value>Visible to all customers</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products">
     <Value>Products</Value>
   </LocaleResource>
@@ -12957,9 +12969,6 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Settings.ReviewType.EditDetails">
     <Value>Edit review type details</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Settings.ReviewType.Fields.Deleted">
-    <Value>Deleted</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Settings.ReviewType.Fields.Description">
     <Value>Description</Value>
